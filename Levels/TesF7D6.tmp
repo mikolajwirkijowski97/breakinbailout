@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ck7smfpwrumvp"]
+
+[ext_resource type="PackedScene" uid="uid://67jud58vuqlg" path="res://Character/MainChar.tscn" id="1_a5qav"]
+[ext_resource type="Texture2D" uid="uid://dxs7wmxixaubt" path="res://icon.svg" id="2_klwms"]
+
+[sub_resource type="Environment" id="Environment_j2uja"]
+ambient_light_color = Color(0.727966, 0.847959, 0.951568, 1)
+ambient_light_energy = 1.65
+
+[node name="TestingLevel" type="WorldEnvironment"]
+environment = SubResource("Environment_j2uja")
+
+[node name="MainChar" parent="." instance=ExtResource("1_a5qav")]
+
+[node name="Sunlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.00574682, -0.816984, 0.576632, 0.00814181, 0.57666, 0.816943, -0.99995, 0, 0.00996569, 25.0481, 16.8892, 0)
+
+[node name="Floor" type="Sprite3D" parent="."]
+transform = Transform3D(130.788, 0, 0, 0, -3.39826e-06, 0.908839, 0, -77.7432, -3.97266e-08, 0, 0, 0)
+texture = ExtResource("2_klwms")
