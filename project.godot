@@ -15,9 +15,13 @@ run/main_scene="res://Levels/TestingLevel.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+MultiplayerInput="*res://addons/multiplayer_input/multiplayer_input.gd"
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg", "res://addons/multiplayer_input/plugin.cfg")
 
 [input]
 
