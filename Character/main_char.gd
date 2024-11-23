@@ -5,10 +5,20 @@ extends CharacterBody3D
 @onready var _animation_state_machine: AnimationNodeStateMachinePlayback = _animation_tree.get("parameters/playback")
 
 @export var SPEED = 10.0
+@export var call_handle_input: bool
+# device doubles as player_id as it shares all the same properties
+var device: int
+var has_device: bool = false
+
+func _ready():
+	PlayerDeviceManager.player_joined.connect(on_player_joined)
+	PlayerDeviceManager.player_left.connect(on_player_left)
+	print_debug("Im ready")
 
 func _physics_process(delta):
-	var dir_x = Input.get_axis("move_left","move_right")
-	var dir_z = Input.get_axis("move_backwards", "move_forward")
+	var dir_x = 0 if not has_device else MultiplayerInput.get_axis(device, "move_left","move_right") 
+	var dir_z = 0 if not has_device else MultiplayerInput.get_axis(device, "move_backwards", "move_forward")
+	
 	var direction = Vector3(dir_x, 0, dir_z)
 	
 	for i in 3:
@@ -33,9 +43,22 @@ func _physics_process(delta):
 	# set the velocity to the animation tree, so it can blend between animations
 	_animation_tree["parameters/Movement/blend_position"] = velocity.length() / SPEED - 1
 
+func _process(delta):
+	if call_handle_input:
+		PlayerDeviceManager.handle_join_input()
 
 func _on_idle_state_entered():
 	pass
 
 func _on_walk_state_entered():
 	pass
+	
+func on_player_joined(_player):
+	print_debug("Device: "+str(_player)+" joined")
+	if _player == device:
+		has_device = true
+
+func on_player_left(_player):
+	print_debug("Device: "+str(_player)+" left")
+	if _player == device:
+		has_device = false

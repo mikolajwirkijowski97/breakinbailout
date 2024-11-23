@@ -2362,6 +2362,7 @@ graph_offset = Vector2(-11, -25)
 [node name="CharacterBody3D" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02516, 0)
 script = ExtResource("1_854q2")
+call_handle_input = true
 
 [node name="MainChar" type="Node3D" parent="."]
 
