@@ -6,9 +6,12 @@ extends CharacterBody3D
 @export var spring_arm: SpringArm3D
 @export var SPEED = 10.0
 @export var call_handle_input: bool = true
+
 # device doubles as player_id as it shares all the same properties
 var device: int
 var has_device: bool = false
+
+var time_in_air = 0.0 
 
 func _ready():
 	PlayerDeviceManager.player_joined.connect(on_player_joined)
@@ -31,12 +34,16 @@ func _physics_process(delta):
 		var look_direction = Vector2(velocity.z, velocity.x)
 		rotation.y = look_direction.angle()
 	
-	# Add the gravity.
+
+	# Add to the midair timer
 	if not is_on_floor():
+		time_in_air += delta
+	# handle the falling
+	if is_falling():
 		velocity += get_gravity() * 20.0 * delta
-	
+
 	move_and_slide()
-	
+	bump_upwards()
 	# let the state machine know if we are moving or not
 	if is_zero_approx(velocity.x+velocity.z):
 		_state_chart.send_event("idle")
@@ -45,6 +52,16 @@ func _physics_process(delta):
 
 	# set the velocity to the animation tree, so it can blend between animations
 	_animation_tree["parameters/Movement/blend_position"] = velocity.length() / SPEED - 1
+
+func is_falling():
+	return time_in_air > 0.15
+
+func bump_upwards():
+	var lower_test = $BumpTester/TestLowerCollision.is_colliding()
+	var higher_test = $BumpTester/TestHigherCollision.is_colliding()
+	if lower_test and not higher_test:
+		velocity.y += 20
+		 
 
 func _process(delta):
 	#spring_arm.position = position
