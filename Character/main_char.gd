@@ -1,4 +1,5 @@
 extends CharacterBody3D
+class_name MainChar
 
 @onready var _state_chart: StateChart = $StateChart
 @onready var _animation_tree: AnimationTree = $AnimationTree
@@ -7,10 +8,12 @@ extends CharacterBody3D
 @export var SPEED = 10.0
 @export var call_handle_input: bool = true
 
+signal main_char_position_updated(position)
+
 # device doubles as player_id as it shares all the same properties
 var device: int
+var p_id: int = 0
 var has_device: bool = false
-
 var time_in_air = 0.0 
 
 func _ready():
@@ -19,10 +22,13 @@ func _ready():
 	print_debug("Im ready")
 
 func _physics_process(delta):
-	var dir_x: float = 0 if not has_device else MultiplayerInput.get_axis(device, "move_left","move_right") 
-	var dir_z: float = 0 if not has_device else MultiplayerInput.get_axis(device, "move_backwards", "move_forward")
+	if(velocity):
+		main_char_position_updated.emit(global_position)
 	
-	var direction: Vector3 = Vector3(-dir_x, 0, dir_z)
+	var dir_x: float = 0.0 if not has_device else MultiplayerInput.get_axis(device, "move_left","move_right") 
+	var dir_z: float = 0.0 if not has_device else MultiplayerInput.get_axis(device, "move_backwards", "move_forward")
+	
+	var direction: Vector3 = Vector3(-dir_x, 0, dir_z).normalized()
 	for i in 3:
 		if direction[i]:
 			velocity[i] = direction[i] * SPEED
@@ -43,7 +49,6 @@ func _physics_process(delta):
 		velocity += get_gravity() * 20.0 * delta
 
 	move_and_slide()
-	bump_upwards()
 	# let the state machine know if we are moving or not
 	if is_zero_approx(velocity.x+velocity.z):
 		_state_chart.send_event("idle")
@@ -55,13 +60,6 @@ func _physics_process(delta):
 
 func is_falling():
 	return time_in_air > 0.15
-
-func bump_upwards():
-	var lower_test = $BumpTester/TestLowerCollision.is_colliding()
-	var higher_test = $BumpTester/TestHigherCollision.is_colliding()
-	if lower_test and not higher_test:
-		velocity.y += 20
-		 
 
 func _process(delta):
 	#spring_arm.position = position
@@ -75,11 +73,18 @@ func _on_walk_state_entered():
 	pass
 	
 func on_player_joined(_player):
-	print_debug("Device: "+str(_player)+" joined")
-	if _player == device:
+	if _player == p_id and not has_device:
+		print_debug("Device: "+str(_player)+" joined")
 		has_device = true
+		device = PlayerDeviceManager.get_player_device(_player)
 
 func on_player_left(_player):
 	print_debug("Device: "+str(_player)+" left")
-	if _player == device:
+	if _player == p_id:
 		has_device = false
+		
+
+
+
+func _on_ledge_detector_bump_encountered():
+	velocity.y += 15

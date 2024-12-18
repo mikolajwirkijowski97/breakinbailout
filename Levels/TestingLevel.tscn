@@ -105,3 +105,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.60984, 2.24487, 18.1824)
 operation = 2
 size = Vector3(1.73633, 3.48975, 1.87885)
 material = ExtResource("2_3u2r3")
+
+[connection signal="main_char_position_updated" from="MainChar" to="CSGCombiner3D/Floor" method="_on_main_char_main_char_position_updated"]
