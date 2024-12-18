@@ -7,7 +7,7 @@ signal bump_encountered()
 @export var upper_range : float
 @export var lower_range : float
 
-func _init():
+func _ready():
 	$TestHigherCollision.position.y = upper_bound
 	$TestHigherCollision.target_position.z = upper_range
 
@@ -17,5 +17,6 @@ func _init():
 func _physics_process(delta):
 	var lower_test = $TestLowerCollision.is_colliding()
 	var higher_test = $TestHigherCollision.is_colliding()
-	if lower_test and higher_test:
+
+	if lower_test and not higher_test:
 		bump_encountered.emit()

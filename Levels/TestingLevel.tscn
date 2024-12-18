@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://ck7smfpwrumvp"]
 
-[ext_resource type="PackedScene" uid="uid://67jud58vuqlg" path="res://Character/MainChar.tscn" id="1_a5qav"]
+[ext_resource type="PackedScene" uid="uid://67jud58vuqlg" path="res://Character/Character.tscn" id="1_a5qav"]
 [ext_resource type="Material" uid="uid://cfa2fgjnvjpbq" path="res://assets/Materials/Prototyping/DarkGrid.tres" id="2_3u2r3"]
 
 [sub_resource type="Environment" id="Environment_j2uja"]
