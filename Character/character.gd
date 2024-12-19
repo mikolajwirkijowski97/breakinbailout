@@ -23,20 +23,12 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-	
-
 func is_falling():
 	return time_in_air > 0.15
 
 func _process(delta):
 	if call_handle_input:
 		PlayerDeviceManager.handle_join_input()
-
-func _on_idle_state_entered():
-	pass
-
-func _on_walk_state_entered():
-	pass
 
 func _on_ledge_detector_bump_encountered():
 	velocity.y += 15
