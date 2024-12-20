@@ -3,10 +3,16 @@ extends Node3D
 @export var player: CharacterBody3D
 @export var animation_tree: AnimationTree
 @export var state_chart: StateChart
-@export var SPEED = 10.0
+
+# Player device members
 var device: int
-var p_id
+var p_id: int
 var has_device: bool = false
+
+# physics related
+@export var SPEED = 10.0
+var time_in_air = 0.0 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	PlayerDeviceManager.player_joined.connect(on_player_joined)
@@ -21,12 +27,29 @@ func _get_direction_from_input() -> Vector3:
 	
 	return Vector3(-dir_x, 0, dir_z).normalized()
 
-func _physics_process(delta):
+func _physics_process(delta: float):
+	# Right now assuming gravity always applies
+	coyote_time_gravity(delta)
+	
 	# set the velocity in the animation tree, so it can blend between animations
 	if animation_tree:
 		animation_tree["parameters/Movement/blend_position"] = \
 		player.velocity.length() / SPEED - 1
-	
+
+func coyote_time_gravity(delta: float):
+	# Add to the midair timer
+	if not player.is_on_floor():
+		time_in_air += delta
+	else:
+		time_in_air = 0.0
+	# handle the falling
+	if should_be_falling():
+		player.velocity += player.get_gravity() * 20.0 * delta
+
+func should_be_falling():
+	var coyote_time: float = 0.1
+	return time_in_air > coyote_time
+
 func walk(direction: Vector3, _delta: float):
 	const look_towards_speed = 14
 	const slow_down_speed = 40
@@ -58,7 +81,6 @@ func _get_configuration_warning():
 	if not player:
 		return 'Player not set'
 	return ''
-
 
 func _on_walk_state_physics_processing(delta):
 	var direction: Vector3 = _get_direction_from_input()
