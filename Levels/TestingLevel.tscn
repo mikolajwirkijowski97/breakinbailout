@@ -21,7 +21,7 @@ environment = SubResource("Environment_j2uja")
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 1.4512, -6.87743)
 
 [node name="InnocentCharacter" parent="." node_paths=PackedStringArray("action_plan") instance=ExtResource("2_cc1l8")]
-transform = Transform3D(0.32, 0, 0, 0, 0.32, 0, 0, 0, 0.32, 6.3417, 1.9551, -6.86498)
+transform = Transform3D(0.41, 0, 0, 0, 0.41, 0, 0, 0, 0.41, 6.3417, 1.9551, -6.86498)
 action_plan = NodePath("ActionPlan")
 call_handle_input = false
 

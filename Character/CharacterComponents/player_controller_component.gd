@@ -26,7 +26,6 @@ func _get_direction_from_input() -> Vector3:
 	MultiplayerInput.get_axis(device, "move_backwards", "move_forward")
 	
 	var direction = Vector3(-dir_x, 0, dir_z).normalized()
-	print_debug(direction)
 	return direction
 
 func _physics_process(delta: float):
@@ -62,14 +61,8 @@ func on_player_left(_player):
 	if _player == p_id:
 		has_device = false
 
-func _get_configuration_warning():
-	if not player:
-		return 'Player not set'
-	return ''
-
 func _on_walk_state_physics_processing(delta):
 	var direction: Vector3 = _get_direction_from_input()
-
 	if not direction and is_zero_approx(player.velocity.x + player.velocity.z)\
 		and state_chart:
 		state_chart.send_event("idle")
