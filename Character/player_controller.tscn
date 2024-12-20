@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dih5g78kdyf1"]
-
-[ext_resource type="Script" path="res://Character/player_controller.gd" id="1_w0pk6"]
-
-[node name="PlayerController" type="Node3D"]
-script = ExtResource("1_w0pk6")
-SPEED = 9.96

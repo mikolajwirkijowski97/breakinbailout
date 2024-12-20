@@ -7,6 +7,7 @@ signal player_left(player)
 
 func join(device: int):
 	var player = next_player()
+	print_debug("Join player: "+str(player))
 	if player >= 0:
 		# initialize default player data here
 		# "team" and "car" are remnants from my game just to provide an example
